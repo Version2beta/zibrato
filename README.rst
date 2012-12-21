@@ -13,18 +13,18 @@ instrumenting code.
 
 @count_me('counter_name')
 
-  Increment a counter named 'counter_name' each time the decorated function
-  is called.
+    Increment a counter named 'counter_name' each time the decorated function
+    is called.
 
 Count_me('counter_name', interval = 1)
 
-  Increment a counter named 'counter_name'. To increment by an interval other
-  than one, set interval to the amount.
+    Increment a counter named 'counter_name'. To increment by an interval other
+    than one, set interval to the amount.
 
 @time_me('timer_name')
 
-  Record the decorated function's execution time under a gauge named
-  'timer_name'.
+    Record the decorated function's execution time under a gauge named
+    'timer_name'.
 
 Time_me('timer_name')
 
@@ -32,10 +32,10 @@ Time_me('timer_name')
   
     Example::
 
-      import zibrato
-      ...
-      with Time_me('timer_name'):
-        pass
+        import zibrato
+        ...
+        with Time_me('timer_name'):
+          pass
 
 Zibrato also includes a worker that processes queued messages and sends them to Librato.
 
@@ -55,6 +55,7 @@ Alternatively, the worker can be run from supervisord::
 
 Options::
 
+    zibrato 
     --username  Librato username
     --apikey    Librato API key
     --hostname  Librato hostname, defaults to "metrics-api.librato.com"
