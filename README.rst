@@ -11,6 +11,9 @@ Usage
 Zibrato consists of two parts. First, it provides the zibrato module used for
 instrumenting code.
 
+Zibrato module
+______________
+
 @count_me('counter_name')
     Increment a counter named 'counter_name' each time the decorated function
     is called.
@@ -32,6 +35,9 @@ Time_me('timer_name')
         ...
         with Time_me('timer_name'):
           pass
+
+Zibrato workers
+_______________
 
 Zibrato also includes a worker that processes queued messages and sends them to Librato.
 
