@@ -12,22 +12,18 @@ Zibrato consists of two parts. First, it provides the zibrato module used for
 instrumenting code.
 
 @count_me('counter_name')
-
     Increment a counter named 'counter_name' each time the decorated function
     is called.
 
 Count_me('counter_name', interval = 1)
-
     Increment a counter named 'counter_name'. To increment by an interval other
     than one, set interval to the amount.
 
 @time_me('timer_name')
-
     Record the decorated function's execution time under a gauge named
     'timer_name'.
 
 Time_me('timer_name')
-
     Record the time spent within a given context.
   
     Example::
