@@ -3,8 +3,17 @@ import os
 sys.path.append("..") 
 sys.path.append(os.path.join(sys.path[0], '..'))
 
-import zibrato
-import sure
+from zibrato import Zibrato
+from expecter import expect
 
-def test_that_I_know_how_to_run_nose():
-  assert True
+class TestThatZibratoIsAvailable:
+  def test_starting_zibrato_with_a_default_socket(self):
+    z = Zibrato()
+  def test_starting_zibrato_with_a_specified_socket(self):
+    z = Zibrato('mySocket')
+    
+
+class TestSendingAMessageToZeroMQ:
+  def test_if_we_can_queue_a_message(self):
+    pass
+
