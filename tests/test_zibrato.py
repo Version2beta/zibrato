@@ -3,7 +3,7 @@ import os
 sys.path.append("..") 
 sys.path.append(os.path.join(sys.path[0], '..'))
 
-from zibrato import Zibrato
+from zibrato import Zibrato, Timer, Counter
 from expecter import expect
 
 class TestThatZibratoIsAvailable:
