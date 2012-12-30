@@ -11,6 +11,7 @@ class Zibrato:
     self.context = zmq.Context()
     self.socket = self.context.socket(zmq.PUB)
     self.socket.bind(socket)
+    self.counter = Counter(self)
 
   def connected(self):
     return not self.socket.closed
@@ -19,5 +20,3 @@ class Zibrato:
     self.socket.send('|'.join(args))
     return 
 
-  timer = Timer()
-  counter = Counter()

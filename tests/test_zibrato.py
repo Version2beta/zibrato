@@ -31,7 +31,7 @@ class TestSendingAMessageToZeroMQ:
   global globalContext
   def test_if_we_can_send_a_message(self):
     z = Zibrato()
-    expect(z.send('test', 'This is a test')) == None
+    expect(z.send('testing', 'This is a test')) == None
   def test_if_we_queued_a_message(self):
     publisher = Publisher(SOCKET, 'testing|test_if_we_queued_a_message')
     publisher.start()
@@ -39,8 +39,9 @@ class TestSendingAMessageToZeroMQ:
     expect(receiver.receive()) == 'testing|test_if_we_queued_a_message'
 
 class TestCountingThings:
-  def test_counters_as_decorators(self):
-    pass
+  def test_that_a_counter_queues_a_count(self):
+    z = Zibrato(SOCKET)
+    expect(z.counter('testing',1)) == None
 
 class Receiver:
   """Create a ZeroMQ subscriber."""
@@ -48,9 +49,6 @@ class Receiver:
     self.context = zmq.Context()
     self.socket = self.context.socket(zmq.SUB)
     self.socket.connect(socket)
-  def __del__(self):
-    del self.socket
-    self.context.term()
   def receive(self, sub = 'testing'):
     self.socket.setsockopt(zmq.SUBSCRIBE, sub)
     received = self.socket.recv()
@@ -63,7 +61,7 @@ class Publisher(threading.Thread):
     self.z = Zibrato(socket)
     self.msg = msg
   def run(self):
-    sleep(0.05)
+    sleep(0.5)
     self.z.send(self.msg)
-    sleep(0.05)
+    sleep(0.5)
 
