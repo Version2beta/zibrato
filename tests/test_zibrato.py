@@ -1,33 +1,16 @@
 import sys
 import os
-sys.path.append("..") 
+sys.path.append('..') 
 sys.path.append(os.path.join(sys.path[0], '..'))
 
 from time import sleep
 
 import zmq
-from threading import Thread
+import threading
 from zibrato import Zibrato
 from expecter import expect
 
-def publisher():
-  """Publish stuff to test we can receive it."""
-  context = zmq.Context.instance()
-  socket = context.socket(zmq.PUB)
-  socket.bind('ipc:///tmp/testing')
-  while True:
-    try:
-      socket.send('test|test_if_we_queued_a_message')
-    except zmq.ZMQError as e:
-      if e.errno == zmq.ETERM:
-        break
-      else:
-        raise
-    sleep(0.001)
-
-globalContext = zmq.Context.instance()
-p_thread = Thread(target=publisher)
-p_thread.start()
+SOCKET = 'ipc:///tmp/testing'
 
 class TestThatZibratoIsAvailable:
   """
@@ -38,7 +21,7 @@ class TestThatZibratoIsAvailable:
     z = Zibrato()
     expect(z.connected()) == True
   def test_starting_zibrato_with_a_specified_socket(self):
-    z = Zibrato('ipc:///tmp/mySocket')
+    z = Zibrato(SOCKET)
     expect(z.connected()) == True
   def test_starting_zibrato_with_an_invalid__socket(self):
     with expect.raises(zmq.ZMQError):
@@ -50,13 +33,37 @@ class TestSendingAMessageToZeroMQ:
     z = Zibrato()
     expect(z.send('test', 'This is a test')) == None
   def test_if_we_queued_a_message(self):
-    context = zmq.Context()
-    socket = context.socket(zmq.SUB)
-    socket.connect('ipc:///tmp/testing')
-    socket.setsockopt(zmq.SUBSCRIBE, 'test')
-    received = socket.recv()
-    expect(received) == 'test|test_if_we_queued_a_message'
-    globalContext.term()
+    publisher = Publisher(SOCKET, 'testing|test_if_we_queued_a_message')
+    publisher.start()
+    receiver = Receiver()
+    expect(receiver.receive()) == 'testing|test_if_we_queued_a_message'
 
+class TestCountingThings:
+  def test_counters_as_decorators(self):
+    pass
 
+class Receiver:
+  """Create a ZeroMQ subscriber."""
+  def __init__(self, socket = SOCKET):
+    self.context = zmq.Context()
+    self.socket = self.context.socket(zmq.SUB)
+    self.socket.connect(socket)
+  def __del__(self):
+    del self.socket
+    self.context.term()
+  def receive(self, sub = 'testing'):
+    self.socket.setsockopt(zmq.SUBSCRIBE, sub)
+    received = self.socket.recv()
+    return received
+
+class Publisher(threading.Thread):
+  """Create a Zibrato message."""
+  def __init__(self, socket = SOCKET, msg = 'testing|'):
+    threading.Thread.__init__(self)
+    self.z = Zibrato(socket)
+    self.msg = msg
+  def run(self):
+    sleep(0.05)
+    self.z.send(self.msg)
+    sleep(0.05)
 
