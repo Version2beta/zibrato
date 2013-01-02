@@ -7,6 +7,7 @@ from time import sleep
 
 import zmq
 import threading
+import multiprocessing
 from zibrato import Zibrato
 from expecter import expect
 
@@ -41,7 +42,11 @@ class TestSendingAMessageToZeroMQ:
 class TestCountingThings:
   def test_that_a_counter_queues_a_count(self):
     z = Zibrato(SOCKET)
-    expect(z.counter('testing',1)) == None
+    z_thread = multiprocessing.Process(target=z.send, args=('testing', '1'))
+    z_thread.start()
+    receiver = Receiver(SOCKET)
+    expect(receiver.receive()) == 'testing|counter'
+    #expect(z.counter('testing',1)) == None
 
 class Receiver:
   """Create a ZeroMQ subscriber."""

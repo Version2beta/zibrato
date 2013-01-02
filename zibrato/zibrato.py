@@ -1,4 +1,5 @@
 import zmq
+from time import sleep
 from timer import Timer
 from counter import Counter
 
@@ -17,6 +18,7 @@ class Zibrato:
     return not self.socket.closed
 
   def send(self, *args):
+    sleep(0.5)
     self.socket.send('|'.join(args))
     return 
 
