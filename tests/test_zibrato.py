@@ -42,11 +42,10 @@ class TestSendingAMessageToZeroMQ:
 class TestCountingThings:
   def test_that_a_counter_queues_a_count(self):
     z = Zibrato(SOCKET)
-    z_thread = multiprocessing.Process(target=z.send, args=('testing', '1'))
+    z_thread = threading.Thread(target=z.counter, args=('testing', 1))
     z_thread.start()
     receiver = Receiver(SOCKET)
-    expect(receiver.receive()) == 'testing|counter'
-    #expect(z.counter('testing',1)) == None
+    expect(receiver.receive()) == 'testing|1'
 
 class Receiver:
   """Create a ZeroMQ subscriber."""
@@ -66,7 +65,6 @@ class Publisher(threading.Thread):
     self.z = Zibrato(socket)
     self.msg = msg
   def run(self):
-    sleep(0.5)
+    sleep(0.05)
     self.z.send(self.msg)
-    sleep(0.5)
 
