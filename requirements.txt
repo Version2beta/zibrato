@@ -1,0 +1,4 @@
+nose
+expecter
+pyzmq
+

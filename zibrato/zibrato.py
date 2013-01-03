@@ -12,13 +12,14 @@ class Zibrato:
     self.context = zmq.Context()
     self.socket = self.context.socket(zmq.PUB)
     self.socket.bind(socket)
+    #self.socket.setsockopt(zmq.HWM, 2048)
     self.counter = Counter(self)
+    sleep(0.5)
 
   def connected(self):
     return not self.socket.closed
 
   def send(self, *args):
-    sleep(0.5)
     self.socket.send('|'.join(args))
     return 
 
