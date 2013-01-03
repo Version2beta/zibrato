@@ -48,9 +48,13 @@ class TestSendingAMessageToZeroMQ:
     z_thread.start()
     expect(receiver.receive()) == 'testing|test_if_we_queued_a_message'
 
-class TestCountingThings:
-  def test_that_a_counter_queues_a_count(self):
-    z_thread = threading.Thread(target=z.counter, args=('testing', 1))
-    z_thread.start()
-    expect(receiver.receive()) == 'testing|1'
+class TestMetricsInGeneral:
+  def test_that_metrics_are_available(self):
+    expect(z.metric) == 'Metric'
+    pass
+  def test_that_metrics_send_to_queue_with_default_values(self):
+    #z_thread = threading.Thread(target=z.metric, kwargs={})
+    #z_thread.start()
+    #expect(receiver.receive()) == 'testing|1'
+    pass
 
