@@ -51,11 +51,11 @@ class TestThatZibratoIsAvailable:
 
 class TestSendingAMessageToZeroMQ:
   def test_if_we_queued_a_message(self):
-    z_thread = threading.Thread(target=z.send, kwargs=({'level': 'testing', 'value': 'test_if_we_queued_a_message'}))
+    z_thread = threading.Thread(target = z.send, kwargs = ({'level': 'testing', 'value': 'test_if_we_queued_a_message'}))
     z_thread.start()
     expect(receiver.receive('testing')) == 'testing|Gauge|default|test_if_we_queued_a_message'
   def test_that_we_can_fail_to_receive_a_message_with_report(self):
-    z_thread = threading.Thread(target=z.send, kwargs=({'level': 'failme', 'value': 'test_if_we_queued_a_message'}))
+    z_thread = threading.Thread(target = z.send, kwargs = ({'level': 'failme', 'value': 'test_if_we_queued_a_message'}))
     z_thread.start()
     expect(receiver.receive('testing')) == 'Resource temporarily unavailable'
 
@@ -87,9 +87,21 @@ class TestMetricsAsDecorators:
 
 class TestMetricsAsContextManagers:
   def test_counter_as_a_context_manager(self):
-    with z.Count_me(level = 'info', name='countermanager'):
+    with z.Count_me(level = 'info', name = 'countermanager'):
       pass
     received = receiver.receive('info') 
     count = float(received.split('|')[3])
     expect(count) == 1
+  def test_counter_plus_five_as_a_context_manager(self):
+    with z.Count_me(level = 'info', name = 'countermanager', value = 5):
+      pass
+    received = receiver.receive('info') 
+    count = float(received.split('|')[3])
+    expect(count) == 5
+  def test_timer_as_a_context_manager(self):
+    with z.Time_me(level = 'info', name='timermanager'):
+      sleep(0.1)
+    received = receiver.receive('info')
+    time = float(received.split('|')[3])
+    expect(time) >= 0.100
 

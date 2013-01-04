@@ -2,6 +2,7 @@ import zmq
 from time import sleep
 from datetime import datetime
 from functools import wraps
+from contextlib import contextmanager
 
 class Zibrato:
   """
@@ -40,6 +41,16 @@ class Zibrato:
       return wraps(f)(wrapper)
     return inner
 
+  @contextmanager
+  def Time_me(self, **kwargs):
+    start = datetime.now()
+    yield
+    total = datetime.now() - start
+    kwargs['mtype'] = kwargs.get('mtype') or 'Timer'
+    kwargs['name'] = kwargs.get('name') or 'default_timer'
+    kwargs['value'] = str(total.seconds + total.microseconds/1000000.00)
+    self.send(**kwargs)
+
   def count_me(self, **decargs):
     def inner(f):
       def wrapper(*args, **kwargs):
@@ -51,4 +62,13 @@ class Zibrato:
         return ret
       return wraps(f)(wrapper)
     return inner
+
+  @contextmanager
+  def Count_me(self, **kwargs):
+    yield
+    kwargs['mtype'] = kwargs.get('mtype') or 'Counter'
+    kwargs['name'] = kwargs.get('name') or 'default_counter'
+    kwargs['value'] = str(kwargs.get('value') or 1)
+    self.send(**kwargs)
+
 

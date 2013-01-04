@@ -14,27 +14,43 @@ instrumenting code.
 Zibrato module
 ______________
 
-@count_me('counter_name')
+z = Zibrato(socket)
+    Set up a metrics handler. Socket can be any transport and endpoint
+    supported by 0MQ's bind function. See http://api.zeromq.org/2-1:zmq-bind.
+
+@z.count_me(name = 'counter_name')
     Increment a counter named 'counter_name' each time the decorated function
     is called.
 
-Count_me('counter_name', interval = 1)
+z.Count_me(name = 'counter_name', value = 4)
     Increment a counter named 'counter_name'. To increment by an interval other
-    than one, set interval to the amount.
+    than one, set value to the amount.
 
-@time_me('timer_name')
+@z.time_me(name = 'timer_name')
     Record the decorated function's execution time under a gauge named
     'timer_name'.
 
-Time_me('timer_name')
+z.Time_me(name = 'timer_name')
     Record the time spent within a given context.
   
-    Example::
+Example code::
 
-        import zibrato
-        ...
-        with Time_me('timer_name'):
-          pass
+    import zibrato
+    z = Zibrato('ipc:///tmp/mysocket')
+    ...
+    @z.time_me(name = 'myfunct_timer')
+    def myfunctt():
+      time_consuming_operations()
+    ...
+    @z.count_me(name = "myfunct_counter')
+    def myfunctc():
+      pass
+    ...
+    with z.Count_me(level = 'info', name = 'counter_name'):
+      pass
+    ...
+    with z.Time_me(level = 'debug', name = 'timer_name'):
+      slow_function_to_time()
 
 Zibrato workers
 _______________
