@@ -33,7 +33,11 @@ z.Count_me(name = 'counter_name', value = 4)
 z.Time_me(name = 'timer_name')
     Record the time spent within a given context.
   
+z.gauge(name = 'gauge_name', value=123)
+    Record a value.
+
 Metric decorators and context managers take up to four arguments:
+
     * level: Monitoring level, modeled after logging levels (i.e. debug,
       info, warning, error, critical). Zibrato workers can be configured to
       pay attention to only specified levels.

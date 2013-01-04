@@ -25,7 +25,9 @@ class Zibrato:
     value = kwargs.get('value') or 1
     message = '%s|%s|%s|%s' % (level, mtype, name, str(value))
     self.socket.send(message)
-    return 
+
+  def gauge(self, **kwargs):
+    self.send(**kwargs)
 
   def time_me(self, **decargs):
     def inner(f):

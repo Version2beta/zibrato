@@ -105,3 +105,8 @@ class TestMetricsAsContextManagers:
     time = float(received.split('|')[3])
     expect(time) >= 0.100
 
+class TestGauges:
+  def test_gauge_with_value(self):
+    z.gauge(level = 'testing', name = 'test_gauge', value = 999)
+    received = receiver.receive('testing')
+    expect(received) == 'testing|Gauge|test_gauge|999'
