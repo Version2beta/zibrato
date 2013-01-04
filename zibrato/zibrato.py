@@ -1,6 +1,7 @@
 import zmq
 from time import sleep
-from metric import *
+from datetime import datetime
+from functools import wraps
 
 class Zibrato:
   """
@@ -11,16 +12,43 @@ class Zibrato:
     self.context = zmq.Context()
     self.socket = self.context.socket(zmq.PUB)
     self.socket.bind(socket)
-    self.metric = Metric(self)
-    #self.counter = Counter(self)
-    #self.timer = Timer(self)
-    #self.gauge = Gauge(self)
     sleep(0.05)
 
   def connected(self):
     return not self.socket.closed
 
-  def send(self, *args):
-    self.socket.send('|'.join(args))
+  def send(self, **kwargs):
+    level = kwargs.get('level') or 'info'
+    mtype = kwargs.get('mtype') or 'Gauge'
+    name = kwargs.get('name') or 'default'
+    value = kwargs.get('value') or 1
+    message = '%s|%s|%s|%s' % (level, mtype, name, str(value))
+    self.socket.send(message)
     return 
+
+  def time_me(self, **decargs):
+    def inner(f):
+      def wrapper(*args, **kwargs):
+        start = datetime.now()
+        ret = f(*args, **kwargs)
+        total = datetime.now() - start
+        decargs['mtype'] = decargs.get('mtype') or 'Timer'
+        decargs['name'] = decargs.get('name') or 'default_timer'
+        decargs['value'] = str(total.seconds + total.microseconds/1000000.00)
+        self.send(**decargs)
+        return ret
+      return wraps(f)(wrapper)
+    return inner
+
+  def count_me(self, **decargs):
+    def inner(f):
+      def wrapper(*args, **kwargs):
+        ret = f(*args, **kwargs)
+        decargs['mtype'] = decargs.get('mtype') or 'Counter'
+        decargs['name'] = decargs.get('name') or 'default_counter'
+        decargs['value'] = str(decargs.get('value') or 1)
+        self.send(**decargs)
+        return ret
+      return wraps(f)(wrapper)
+    return inner
 

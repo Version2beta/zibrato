@@ -20,9 +20,16 @@ class Receiver:
     self.context = zmq.Context()
     self.socket = self.context.socket(zmq.SUB)
     self.socket.connect(socket)
-  def receive(self, sub = 'testing'):
-    self.socket.setsockopt(zmq.SUBSCRIBE, sub)
-    received = self.socket.recv()
+  def receive(self, sub):
+    if sub:
+      self.socket.setsockopt(zmq.SUBSCRIBE, sub)
+    self.socket.RCVTIMEO = 1000
+    try:
+      received = self.socket.recv()
+    except zmq.ZMQError as e:
+      return e.strerror
+    except:
+      raise
     return received
 
 receiver = Receiver(SOCKET)
@@ -44,14 +51,45 @@ class TestThatZibratoIsAvailable:
 
 class TestSendingAMessageToZeroMQ:
   def test_if_we_queued_a_message(self):
-    z_thread = threading.Thread(target=z.send, args=('testing', 'test_if_we_queued_a_message'))
+    z_thread = threading.Thread(target=z.send, kwargs=({'level': 'testing', 'value': 'test_if_we_queued_a_message'}))
     z_thread.start()
-    expect(receiver.receive()) == 'testing|test_if_we_queued_a_message'
+    expect(receiver.receive('testing')) == 'testing|Gauge|default|test_if_we_queued_a_message'
+  def test_that_we_can_fail_to_receive_a_message_with_report(self):
+    z_thread = threading.Thread(target=z.send, kwargs=({'level': 'failme', 'value': 'test_if_we_queued_a_message'}))
+    z_thread.start()
+    expect(receiver.receive('testing')) == 'Resource temporarily unavailable'
 
-class TestMetricsInGeneral:
-  def test_that_metrics_send_to_queue_with_default_values(self):
-    z_thread = threading.Thread(target=z.metric, kwargs={})
-    z_thread.start()
-    expect(receiver.receive('info')) == 'info'
+class TestMetricsAsDecorators:
+  @z.count_me(level = 'info', name = 'countertest')
+  def function_that_will_be_counted(self):
     pass
+  def test_counter_as_decorator(self):
+    self.function_that_will_be_counted()
+    received = receiver.receive('info') 
+    count = float(received.split('|')[3])
+    expect(count) == 1
+  @z.count_me(level = 'info', name = 'countertest', value = 5)
+  def function_that_will_be_counted_plus_five(self):
+    pass
+  def test_counter_as_decorator_with_larger_increment(self):
+    self.function_that_will_be_counted_plus_five()
+    received = receiver.receive('info') 
+    count = float(received.split('|')[3])
+    expect(count) == 5
+  @z.time_me(level = 'info', name = 'timertest')
+  def function_that_takes_some_time(self):
+    sleep(0.1)
+  def test_timer_as_decorator(self):
+    self.function_that_takes_some_time()
+    received = receiver.receive('info')
+    time = float(received.split('|')[3])
+    expect(time) >= 0.100
+
+class TestMetricsAsContextManagers:
+  def test_counter_as_a_context_manager(self):
+    with z.Count_me(level = 'info', name='countermanager'):
+      pass
+    received = receiver.receive('info') 
+    count = float(received.split('|')[3])
+    expect(count) == 1
 
