@@ -1,5 +1,6 @@
 import zmq
-from time import sleep
+import inspect
+from time import sleep, time
 from datetime import datetime
 from functools import wraps
 from contextlib import contextmanager
@@ -18,13 +19,19 @@ class Zibrato:
   def connected(self):
     return not self.socket.closed
 
-  def send(self, **kwargs):
+  def pack(self, **kwargs):
     level = kwargs.get('level') or 'info'
     mtype = kwargs.get('mtype') or 'Gauge'
     name = kwargs.get('name') or 'default'
-    value = kwargs.get('value') or 1
-    message = '%s|%s|%s|%s' % (level, mtype, name, str(value))
-    self.socket.send(message)
+    value = str(kwargs.get('value') or 1)
+    source = kwargs.get('source') or "not_specified"
+    timestamp = str(int(float(time())))
+    message = '%s|%s|%s|%s|%s|%s' % ( level, mtype, name, value,
+                                      timestamp, source )
+    return message
+
+  def send(self, **kwargs):
+    self.socket.send(self.pack(**kwargs))
 
   def gauge(self, **kwargs):
     self.send(**kwargs)

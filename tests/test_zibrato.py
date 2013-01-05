@@ -53,7 +53,7 @@ class TestSendingAMessageToZeroMQ:
   def test_if_we_queued_a_message(self):
     z_thread = threading.Thread(target = z.send, kwargs = ({'level': 'testing', 'value': 'test_if_we_queued_a_message'}))
     z_thread.start()
-    expect(receiver.receive('testing')) == 'testing|Gauge|default|test_if_we_queued_a_message'
+    expect(receiver.receive('testing')[0:49]) == 'testing|Gauge|default|test_if_we_queued_a_message'
   def test_that_we_can_fail_to_receive_a_message_with_report(self):
     z_thread = threading.Thread(target = z.send, kwargs = ({'level': 'failme', 'value': 'test_if_we_queued_a_message'}))
     z_thread.start()
@@ -109,4 +109,4 @@ class TestGauges:
   def test_gauge_with_value(self):
     z.gauge(level = 'testing', name = 'test_gauge', value = 999)
     received = receiver.receive('testing')
-    expect(received) == 'testing|Gauge|test_gauge|999'
+    expect(received[0:28]) == 'testing|Gauge|test_gauge|999'
