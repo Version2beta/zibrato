@@ -50,7 +50,7 @@ Metric decorators and context managers take up to four arguments:
 Example code::
 
     import zibrato
-    z = Zibrato('ipc:///tmp/mysocket')
+    z = Zibrato('tcp://127.0.0.1:5555')
     ...
     @z.time_me(name = 'myfunct_timer')
     def myfunctt():
@@ -73,12 +73,12 @@ Zibrato also includes a worker that processes queued messages and sends them to 
 
 Example::
 
-    python /usr/local/lib/python2.7/dist-packages/zibrato/workers/librato.py --username USERNAME --apikey KEY
+    python /usr/local/lib/python2.7/dist-packages/zibrato/workers/librato.py --username USERNAME --apitoken KEY --levels test,debug,info --flush 60
 
 Alternatively, the worker can be run from supervisord::
 
     [program:zibrato_librato]
-    command=python /usr/local/lib/python2.7/dist-packages/zibrato/workers/librato.py --username USERNAME --apikey KEY
+    command=python /usr/local/lib/python2.7/dist-packages/zibrato/workers/librato.py --username USERNAME --apitoken KEY --levels info,warn --flush 10
     process_name=%(program_name)s
     autostart=true
     autorestart=true
@@ -89,7 +89,7 @@ Options::
 
     zibrato 
     --username  Librato username
-    --apikey    Librato API key
-    --hostname  Librato hostname, defaults to "metrics-api.librato.com"
-    --apipath   Librato path, defaults to "/v1/"
+    --apitoken  Librato API key
+    --levels    Subscribe to which levels (comma-separated)
+    --flush     Flush time in seconds
 

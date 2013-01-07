@@ -5,21 +5,30 @@ sys.path.append(os.path.join(sys.path[0], '..'))
 
 import zmq
 import threading
-from zibrato import Zibrato
+from zibrato import Zibrato, Broker
 from expecter import expect
 from time import sleep
 
-SOCKET = 'ipc:///tmp/testing'
+BROKER_HOST = '127.0.0.1'
+PUB_HOST = '127.0.0.1'
+SUB_HOST = '127.0.0.1'
+PUB_PORT = 55550
+SUB_PORT = 55551
+
+context = zmq.Context.instance()
 
 class Receiver:
   """
   Create a ZeroMQ subscriber. This is what will "hear" Zibrato publish
   messages. Must be done before initializing Zibrato.
   """
-  def __init__(self, socket = SOCKET):
-    self.context = zmq.Context()
+  def __init__(self, **kwargs):
+    context = kwargs.get('context') or zmq.Context()
+    host = kwargs.get('host') or SUB_HOST
+    port = kwargs.get('port') or SUB_PORT
+    self.context = context
     self.socket = self.context.socket(zmq.SUB)
-    self.socket.connect(socket)
+    self.socket.connect('tcp://%s:%d' % (host, int(port)))
   def receive(self, sub):
     if sub:
       self.socket.setsockopt(zmq.SUBSCRIBE, sub)
@@ -31,9 +40,20 @@ class Receiver:
     except:
       raise
     return received
+  def __del__(self):
+    self.socket.close()
 
-receiver = Receiver(SOCKET)
-z = Zibrato(SOCKET)
+receiver = Receiver(context = context, host = SUB_HOST, port = SUB_PORT)
+z = Zibrato(context = context, host = PUB_HOST, port = PUB_PORT)
+#b = Broker(context = context, host = PUB_HOST, port = PUB_PORT)
+
+def setup():
+  #b_thread = threading.Thread(target = b.main)
+  #b_thread.start()
+  pass
+
+def teardown():
+  context.term()
 
 class TestThatZibratoIsAvailable:
   """
@@ -44,11 +64,14 @@ class TestThatZibratoIsAvailable:
     expect(z.connected()) == True
   def test_starting_zibrato_with_an_invalid__socket(self):
     with expect.raises(zmq.ZMQError):
-      z = Zibrato('oops:///tmp/mySocket')
+      z = Zibrato(host = 'nowhere')
   def test_starting_zibrato_with_a_default_socket(self):
     z = Zibrato()
     expect(z.connected()) == True
-
+  def test_starting_a_second_instance_on_the_same_socket(self):
+    z = Zibrato(host = PUB_HOST, port = PUB_PORT)
+    expect(z.connected()) == True
+    
 class TestSendingAMessageToZeroMQ:
   def test_if_we_queued_a_message(self):
     z_thread = threading.Thread(target = z.send, kwargs = ({'level': 'testing', 'value': 'test_if_we_queued_a_message'}))

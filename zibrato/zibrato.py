@@ -1,5 +1,4 @@
 import zmq
-import inspect
 from time import sleep, time
 from datetime import datetime
 from functools import wraps
@@ -10,11 +9,17 @@ class Zibrato:
   Zibrato class sets up the connection to ZeroMQ and provides the timer and
   counter methods used to make measurements.
   """
-  def __init__(self, socket = 'ipc:///tmp/zibrato'):
-    self.context = zmq.Context()
+  def __init__(self, **kwargs):
+    context = kwargs.get('context') or zmq.Context()
+    host = kwargs.get('host') or '127.0.0.1'
+    port = kwargs.get('port') or 55550
+    self.context = context
     self.socket = self.context.socket(zmq.PUB)
-    self.socket.bind(socket)
-    sleep(0.05)
+    self.socket.connect('tcp://%s:%d' % (host, int(port)))
+    self.socket.setsockopt(zmq.LINGER, 0)
+
+  def __del__(self):
+    self.socket.close()
 
   def connected(self):
     return not self.socket.closed
