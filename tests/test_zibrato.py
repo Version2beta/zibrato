@@ -27,8 +27,8 @@ except ImportError:
 BROKER_HOST = '127.0.0.1'
 PUB_HOST = '127.0.0.1'
 SUB_HOST = '127.0.0.1'
-PUB_PORT = 55550
-SUB_PORT = 55551
+PUB_PORT = 5550
+SUB_PORT = 5551
 
 context = zmq.Context.instance()
 

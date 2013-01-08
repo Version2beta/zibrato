@@ -19,7 +19,7 @@ class Backend(object):
       setattr(self, key, value)
     context = kwargs.get('context') or zmq.Context()
     host = kwargs.get('host') or '127.0.0.1'
-    port = kwargs.get('port') or 55551
+    port = kwargs.get('port') or 5551
     self.context = context
     self.socket = self.context.socket(zmq.SUB)
     self.socket.connect('tcp://%s:%d' % (host, int(port)))
@@ -55,7 +55,7 @@ class Backend(object):
 class Broker(object):
   def __init__(self, **kwargs):
     self.host = kwargs.get('host') or '127.0.0.1'
-    self.port = int(kwargs.get('port')) or 55550
+    self.port = int(kwargs.get('port')) or 5550
     self.context = kwargs.get('context') or zmq.Context.instance()
     self.frontend = self.context.socket(zmq.SUB)
     self.frontend.bind('tcp://%s:%d' % (self.host, self.port))
@@ -78,8 +78,8 @@ if __name__ == "__main__":
     description = 'Backend manager for Zibrato')
   parser.add_argument('--host', default = '127.0.0.1',
       help='TCP address first or FQDN of listener (default 127.0.0.1)')
-  parser.add_argument('--port', default = '55550',
-      help='Lower port of pair (default 55550)')
+  parser.add_argument('--port', default = '5550',
+      help='Lower port of pair (default 5550)')
   args = parser.parse_args()
   b = Broker(host = args.host, port = args.port)
   b.main()

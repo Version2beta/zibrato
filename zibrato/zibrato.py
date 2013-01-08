@@ -12,7 +12,7 @@ class Zibrato:
   def __init__(self, **kwargs):
     context = kwargs.get('context') or zmq.Context()
     host = kwargs.get('host') or '127.0.0.1'
-    port = kwargs.get('port') or 55550
+    port = kwargs.get('port') or 5550
     self.context = context
     self.socket = self.context.socket(zmq.PUB)
     self.socket.connect('tcp://%s:%d' % (host, int(port)))

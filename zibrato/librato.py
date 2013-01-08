@@ -68,7 +68,7 @@ if __name__ == "__main__":
       default = '127.0.0.1')
   parser.add_argument('--port',
       help = 'Zibrato backend port',
-      default = '55551')
+      default = '5551')
   parser.add_argument('--username',
       help = 'Librato username')
   parser.add_argument('--apitoken',
