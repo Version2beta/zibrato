@@ -48,7 +48,6 @@ z.gauge(level = 'crit', name = 'gauge_name', value=123)
     Record a value.
 
 Metric decorators and context managers take up to four arguments:
-
     * level: Required. Monitoring level, modeled after logging levels (i.e.
       debug, info, warning, error, critical) but completely arbitrary so you
       can use whatever labels work for you. Zibrato workers are configured to
