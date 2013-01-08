@@ -84,7 +84,7 @@ if __name__ == "__main__":
       username = args.username,
       apitoken = args.apitoken)
   for level in args.levels.split(','):
-    l.subscribe(level)
+    l.subscribe(level.strip())
   count_measurements = 0
   count_flushes = 0
   start = int(time())

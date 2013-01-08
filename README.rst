@@ -48,6 +48,10 @@ z.Time_me(level = 'debug', name = 'timer_name')
 z.gauge(level = 'crit', name = 'gauge_name', value=123)
     Record a value.
 
+Zibrato decorators, of course, return the result of the wrapped function.
+Context managers return None as they are not intended to be used from within
+the 'with' block. The gauge method returns None also.
+
 Metric decorators and context managers take up to four arguments:
 
 * level: Required. Monitoring level, modeled after logging levels (i.e.
@@ -85,6 +89,8 @@ Example code::
     ...
     with z.Time_me(level = 'debug', name = 'timer_name'):
       slow_function_to_time()
+    ...
+    z.gauge(level = 'crit', name = 'gauge_name', value=123)
 
 Zibrato workers
 _______________
@@ -158,6 +164,14 @@ Alternatively, the worker can be run from supervisord::
     autorestart=true
     stopsignal=QUIT
     user=www-data
+
+Creating a new Zibrato worker
++++++++++++++++++++++++++++++
+
+New Zibrato backend workers should subclass the Backend class specified in 
+zibrato/backend.py. They probably need to reimplement the connect, parse,
+post, and flush methods, and must include code for running as __main__. See
+zibrato/librato.py as an example.
 
 Metric types
 ____________
