@@ -205,7 +205,7 @@ don't work the way we need our counters to work. So the metrics implemented
 in this code translate into only gauges at Librato.
 
 Other business
-++++++++++++++
+--------------
 
 Tests
 _____
