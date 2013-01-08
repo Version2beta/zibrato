@@ -2,10 +2,10 @@ from distutils.core import setup
 
 setup(
     name='Zibrato',
-    version='0.1.1',
+    version='0.1.2',
     author='Rob Martin @version2beta',
     author_email='rob.martin@tartansolutions.com',
-    packages=['zibrato', 'tests'],
+    packages=['zibrato', 'zibrato.tests'],
     scripts=[],
     url='http://pypi.python.org/pypi/zibrato/',
     license='LICENSE.txt',
