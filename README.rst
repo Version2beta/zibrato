@@ -22,12 +22,13 @@ from zibrato import Zibrato
 z = Zibrato()
     Set up a new instance of Zibrato to use in your code. Accepts several
     settings:
-        * host: The FQDN or IP address with which to connect. Optional.
-          Defaults to '127.0.0.1'. See "Zibrato workers" below.
-        * port: The port with which to connect. Optional. Defaults to 5550.
-        * context: A ZeroMQ context instance. This is completely optional and
-          only desirable under advanced circumstances where ZeroMQ is being
-          used in other ways, too.
+
+    * host: The FQDN or IP address with which to connect. Optional.
+      Defaults to '127.0.0.1'. See "Zibrato workers" below.
+    * port: The port with which to connect. Optional. Defaults to 5550.
+    * context: A ZeroMQ context instance. This is completely optional and
+      only desirable under advanced circumstances where ZeroMQ is being
+      used in other ways, too.
 
 @z.count_me(level = 'info', name = 'counter_name')
     Increment a counter named 'counter_name' each time the decorated function
@@ -48,21 +49,22 @@ z.gauge(level = 'crit', name = 'gauge_name', value=123)
     Record a value.
 
 Metric decorators and context managers take up to four arguments:
-    * level: Required. Monitoring level, modeled after logging levels (i.e.
-      debug, info, warning, error, critical) but completely arbitrary so you
-      can use whatever labels work for you. Zibrato workers are configured to
-      pay attention to only specified levels.
-    * mtype: Required. Type of metric, typically 'counter', 'timer', and
-      'gauge'. See "Metric types" below.
-    * name: Required. Name of the metric being recorded.
-    * value: Value to record. For timing functions, value is neither required
-      nor desirable to provide, and if provided it will be replaced by the
-      measured time. For counters, value represents the quantity by which the
-      counter should be incremented, and defaults to 1 if not provided. For
-      gauges, this is the fixed reading and should be provided.
-    * source: The source of the metric. This might represent the name of the
-      program, class, or server for instance. Optional and defaults to
-      'not_specified'.
+
+* level: Required. Monitoring level, modeled after logging levels (i.e.
+  debug, info, warning, error, critical) but completely arbitrary so you
+  can use whatever labels work for you. Zibrato workers are configured to
+  pay attention to only specified levels.
+* mtype: Required. Type of metric, typically 'counter', 'timer', and
+  'gauge'. See "Metric types" below.
+* name: Required. Name of the metric being recorded.
+* value: Value to record. For timing functions, value is neither required
+  nor desirable to provide, and if provided it will be replaced by the
+  measured time. For counters, value represents the quantity by which the
+  counter should be incremented, and defaults to 1 if not provided. For
+  gauges, this is the fixed reading and should be provided.
+* source: The source of the metric. This might represent the name of the
+  program, class, or server for instance. Optional and defaults to
+  'not_specified'.
 
 Example code::
 
@@ -135,15 +137,16 @@ Example::
         --username USERNAME --apitoken KEY --levels test,debug,info --flush 60
 
 The available parameters are:
-    * --host: The FQDN hostname or IP address of the Zibrato backend.
-    * --port: The port to which the Zibrato work should connect. This is the
-      higher of the two ports in the pair, and one greater than the port
-      specified when starting the backend.
-    * --levels: The levels to which this worker should subscribe.
-    * --flush: The frequency with which the measurements should be sent to
-      Librato.
-    * --username: The Librato username for connecting to their API.
-    * --apitoken: The Librato API Token for connecting to their API.
+
+* --host: The FQDN hostname or IP address of the Zibrato backend.
+* --port: The port to which the Zibrato work should connect. This is the
+  higher of the two ports in the pair, and one greater than the port
+  specified when starting the backend.
+* --levels: The levels to which this worker should subscribe.
+* --flush: The frequency with which the measurements should be sent to
+  Librato.
+* --username: The Librato username for connecting to their API.
+* --apitoken: The Librato API Token for connecting to their API.
 
 Alternatively, the worker can be run from supervisord::
 
@@ -159,21 +162,21 @@ Alternatively, the worker can be run from supervisord::
 Metric types
 ____________
 
-    * Counters. Zibrato counters keep track of how many times an event with
-      a common name happens between two flushes on the back end. So for
-      example, let's say you're keeping track of how may times 'myfunct' is
-      called, and you're flushing your data to the back end every 60 seconds.
-      If you don't specify a value, then the 'myfunct_counter' will be
-      incremented by one each time the counter is encountered, sent to Librato
-      and reset to zero every 60 seconds. If source is specified, the counter
-      uniquely tracked by source and name, rather than just name. The
-      timestamp for a counter is given as the time the counter is flushed.
-    * Gauges. Gauges hold a value at a given time. Each gauge measurement
-      is recorded to the backend with a timestamp for the time Zibrato
-      received the measurement.
-    * Timers. Zibrato provides a special gauge that it fills in automatically
-      with the amount of time something took. Time is measured in seconds to
-      microsecond resolution using Python's datetime.now() method.
+* Counters. Zibrato counters keep track of how many times an event with
+  a common name happens between two flushes on the back end. So for
+  example, let's say you're keeping track of how may times 'myfunct' is
+  called, and you're flushing your data to the back end every 60 seconds.
+  If you don't specify a value, then the 'myfunct_counter' will be
+  incremented by one each time the counter is encountered, sent to Librato
+  and reset to zero every 60 seconds. If source is specified, the counter
+  uniquely tracked by source and name, rather than just name. The
+  timestamp for a counter is given as the time the counter is flushed.
+* Gauges. Gauges hold a value at a given time. Each gauge measurement
+  is recorded to the backend with a timestamp for the time Zibrato
+  received the measurement.
+* Timers. Zibrato provides a special gauge that it fills in automatically
+  with the amount of time something took. Time is measured in seconds to
+  microsecond resolution using Python's datetime.now() method.
 
 Please note that the Zibrato backend is ultimately responsible for
 implementing how each metric type is recorded. In this release only one
