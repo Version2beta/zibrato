@@ -1,1 +1,2 @@
 v0.1, 12/20/2012 -- Initial release
+v0.1.1, 12/20/2012 -- Working out details of requirements

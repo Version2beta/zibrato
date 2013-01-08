@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='Zibrato',
-    version='0.1.0',
+    version='0.1.1',
     author='Rob Martin @version2beta',
     author_email='rob.martin@tartansolutions.com',
     packages=['zibrato', 'tests'],
@@ -16,12 +16,5 @@ setup(
         'fuzzywuzzy',
         'requests',
         'simplejson',
-        'collections',
-        'argparse',
-        'datetime',
-        'time',
-        're',
-        'sys',
-        'os',
     ],
 )

@@ -7,6 +7,20 @@ then shifted into a ZeroMQ queue, where a backend process can collect them
 and send them to Librato. Other backends such as statsd are contemplated for
 the future.
 
+Installation
+------------
+
+Zibrato is available through PyPi at http://pypi.python.org/pypi/Zibrato/.
+
+Alternatively, one should be able to clone this repository and run pip install
+with the requirements.txt file.
+
+Please note that pyzmq is an installation prerequisite. Ubuntu users (and
+probably others) will need the python-dev package installed in order to build
+pyzmq::
+
+    sudo apt-get install python-dev
+
 Usage
 -----
 
