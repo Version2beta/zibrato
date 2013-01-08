@@ -89,7 +89,6 @@ if __name__ == "__main__":
   count_flushes = 0
   start = int(time())
   while True:
-    count_measurements += 1
     try:
       l.post(l.receive())
       if int(time()) >= start + int(args.flush):
@@ -99,4 +98,5 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
       raise KeyboardInterrupt('%d measurements / %d flushes' % 
           (count_measurements, count_flushes))
+    count_measurements += 1
 
