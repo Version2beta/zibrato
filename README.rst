@@ -17,6 +17,7 @@ Zibrato module
 ______________
 
 from zibrato import Zibrato
+
 z = Zibrato()
     Set up a new instance of Zibrato to use in your code. Accepts several
     settings:
