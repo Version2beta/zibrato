@@ -17,6 +17,7 @@ Zibrato module
 ______________
 
 from zibrato import Zibrato
+    Librato, Backend, and Broker modules also available. See code.
 
 z = Zibrato()
     Set up a new instance of Zibrato to use in your code. Accepts several
