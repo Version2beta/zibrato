@@ -265,10 +265,10 @@ class testLibrato:
     resp = l.flush()
     expect(resp) == 200
   def test_that_we_can_roll_up_counters(self):
-    for x in range(2):
+    for x in range(random.randrange(20)):
       message = z.pack( level = 'testing_librato',
                       mtype = 'Counter',
-                      source = 'TestLibrato' + str(x),
+                      source = 'TestLibrato',
                       name = 'test_that_we_can_send_roll_up_counters',
                       value = 1)
       l.post(message)
