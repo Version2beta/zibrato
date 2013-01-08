@@ -63,13 +63,26 @@ class Librato(Backend):
 if __name__ == "__main__":
   parser = argparse.ArgumentParser(
     description = 'Librato backend worker for Zibrato')
-  parser.add_argument('--username', help='Librato username')
-  parser.add_argument('--apitoken', help='Librato API token')
-  parser.add_argument('--levels', help='Subscribe to which levels')
-  parser.add_argument('--flush', help='Flush time in seconds')
+  parser.add_argument('--host',
+      help = 'Zibrato backend FQDN or IP',
+      default = '127.0.0.1')
+  parser.add_argument('--port',
+      help = 'Zibrato backend port',
+      default = '55551')
+  parser.add_argument('--username',
+      help = 'Librato username')
+  parser.add_argument('--apitoken',
+      help = 'Librato API token')
+  parser.add_argument('--levels',
+      help = 'Subscribe to which levels')
+  parser.add_argument('--flush',
+      help = 'Flush time in seconds')
   args = parser.parse_args()
-  l = Librato(username = args.username,
-              apitoken = args.apitoken)
+  l = Librato(
+      host = args.host,
+      port = args.port,
+      username = args.username,
+      apitoken = args.apitoken)
   for level in args.levels.split(','):
     l.subscribe(level)
   count_measurements = 0

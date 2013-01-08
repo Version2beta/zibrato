@@ -18,7 +18,7 @@ class Zibrato:
     self.socket.connect('tcp://%s:%d' % (host, int(port)))
     self.socket.setsockopt(zmq.LINGER, 0)
 
-  def __del__(self):
+  def close(self):
     self.socket.close()
 
   def connected(self):

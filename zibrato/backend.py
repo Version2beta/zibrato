@@ -17,11 +17,12 @@ class Backend(object):
   def __init__(self, **kwargs):
     for key, value in kwargs.items():
       setattr(self, key, value)
-    if not vars().has_key('socket'):
-      socket = 'tcp://127.0.0.1:5555'
-    self.context = zmq.Context.instance()
+    context = kwargs.get('context') or zmq.Context()
+    host = kwargs.get('host') or '127.0.0.1'
+    port = kwargs.get('port') or 55551
+    self.context = context
     self.socket = self.context.socket(zmq.SUB)
-    self.socket.connect(socket)
+    self.socket.connect('tcp://%s:%d' % (host, int(port)))
     self.queue = {}
   def subscribe(self, sub):
     self.socket.setsockopt(zmq.SUBSCRIBE, sub)
@@ -48,6 +49,8 @@ class Backend(object):
       self.queue[mtype] = [measurement]
   def flush(self, message):
     self.queue = {}
+  def close(self):
+    self.socket.close()
 
 class Broker(object):
   def __init__(self, **kwargs):
