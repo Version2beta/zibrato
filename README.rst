@@ -217,6 +217,16 @@ _____________
 
 Pull requests are welcome!
 
+Thank you
+_________
+
+Special thanks to Tracy Harms @kaleidic who coached me on Agile methodologies
+and test driven development, plus helped tease out the intricasies of ZeroMQ
+and the architecture of this program.
+
+Also, thank you to regulars on #zeromq who answered beginner questions
+patiently.
+
 License
 _______
 

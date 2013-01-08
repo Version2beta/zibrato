@@ -1,3 +1,5 @@
+sys
+os
 nose
 expecter
 pyzmq
@@ -6,3 +8,10 @@ requests
 simplejson
 collections
 argparse
+datetime
+functools
+contextlib
+re
+time
+threading
+

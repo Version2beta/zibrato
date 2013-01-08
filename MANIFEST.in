@@ -1,2 +1,5 @@
+include tests/config.py.dist
+exclude tests/config.py
 include *.txt
 recursive-include docs *.txt
+include README.rst
