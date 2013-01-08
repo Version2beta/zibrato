@@ -9,5 +9,5 @@ zibrato/backend.py
 zibrato/librato.py
 zibrato/zibrato.py
 zibrato/tests/__init__.py
-zibrato/tests/config.py
+zibrato/tests/config.py.dist
 zibrato/tests/test_zibrato.py
