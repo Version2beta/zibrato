@@ -12,14 +12,19 @@ Installation
 
 Zibrato is available through PyPi at http://pypi.python.org/pypi/Zibrato/.
 
-Alternatively, one should be able to clone this repository and run pip install
-with the requirements.txt file.
+Alternatively, one should be able to clone the github repository at
+https://github.com/Version2beta/zibrato and run pip install the
+requirements.txt file.
 
 Please note that pyzmq is an installation prerequisite. Ubuntu users (and
 probably others) will need the python-dev package installed in order to build
 pyzmq::
 
     sudo apt-get install python-dev
+
+To run tests, you'll also need Python nose and Gary Bernhardt's expecter
+package::
+    pip install nose expecter
 
 Usage
 -----
@@ -237,6 +242,10 @@ _________
 Special thanks to Tracy Harms @kaleidic who coached me on Agile methodologies
 and test driven development, plus helped tease out the intricasies of ZeroMQ
 and the architecture of this program.
+
+Thanks too to Gary Bernhardt @garybernhardt for the expecter library, and for
+helping Tracy and I figure out how to translate Ruby TDD experience into
+Python.
 
 Also, thank you to regulars on #zeromq who answered beginner questions
 patiently.

@@ -4,10 +4,10 @@ LICENSE.txt
 README.rst
 requirements.txt
 setup.py
-tests/__init__.py
-tests/config.py.dist
-tests/test_zibrato.py
 zibrato/__init__.py
 zibrato/backend.py
 zibrato/librato.py
 zibrato/zibrato.py
+zibrato/tests/__init__.py
+zibrato/tests/config.py
+zibrato/tests/test_zibrato.py

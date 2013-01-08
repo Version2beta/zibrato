@@ -1,3 +1,5 @@
 v0.1, 12/20/2012 -- Initial release
 v0.1.1, 1/8/2013 -- Working out details of requirements
 v0.1.2, 1/8/2013 -- Corrected file structure issue with tests; improved documentation slightly.
+v0.1.3, 1/8/2013 -- Minor documentation improvements.
+v0.1.4, 1/8/2013 -- Added a requirements.txt for tests.
