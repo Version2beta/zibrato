@@ -23,8 +23,8 @@ setup(
     },
     entry_points = {
       'console_scripts': [
-        'broker = zibrato.backend:main',
-        'librato = zibrato.librato:main',
+        'zibrato-broker = zibrato.backend:main',
+        'zibrato-librato = zibrato.librato:main',
       ]
     }
 )

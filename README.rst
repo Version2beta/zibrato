@@ -114,8 +114,8 @@ Example code::
 Zibrato workers
 _______________
 
-Zibrato requires a backend worker (actually a 'broker') that connects one or
-more publishers of measurements (source code being run in parallel) to one or
+Zibrato requires a broker that connects one or more publishers
+of measurements (source code being run in parallel) to one or
 more measurement backends (Librato and Statsd, for example.)
 
 The Zibrato broker
@@ -128,8 +128,7 @@ backends can subscribe to get measurements for sending off to other services.
 
 The broker might be started like this::
 
-    python /usr/local/lib/python2.7/dist-packages/zibrato/backend.py \
-        --host 127.0.0.1 --port 5550
+    /usr/bin/librato-broker --host 127.0.0.1 --port 5550
 
 where 'host' specifies the IP address or FQDN and 'port' specifies the lower
 port of a consecutive pair to which the broker should bind. Both host and port
@@ -141,9 +140,8 @@ workers' below).
 The preferred way to start the Zibrato backend would be to use a service such
 as supervisord::
 
-    [program:zibrato_backend]
-    command=python /usr/local/lib/python2.7/dist-packages/zibrato/backend.py \
-        --host 127.0.0.1 --port 5550
+    [program:zibrato-broker]
+    command=/usr/bin/zibrato-broker --host 127.0.0.1 --port 5550
     process_name=%(program_name)s
     autostart=true
     autorestart=true
@@ -158,8 +156,8 @@ measurements and sends them to Librato.
 
 Example::
 
-    python /usr/local/lib/python2.7/dist-packages/zibrato/librato.py \
-        --username USERNAME --apitoken KEY --levels test,debug,info --flush 60
+    python /usr/bin/zibrato-librato --username USERNAME --apitoken KEY \
+      --levels test,debug,info --flush 60
 
 The available parameters are:
 
@@ -175,9 +173,9 @@ The available parameters are:
 
 Alternatively, the worker can be run from supervisord::
 
-    [program:zibrato_librato]
-    command=python /usr/local/lib/python2.7/dist-packages/zibrato/librato.py \
-        --username USERNAME --apitoken KEY --levels info,warn --flush 60
+    [program:zibrato-librato]
+    command=python /usr/bin/zibrato-librato --username USERNAME \
+      --apitoken KEY --levels info,warn --flush 60
     process_name=%(program_name)s
     autostart=true
     autorestart=true
@@ -187,10 +185,15 @@ Alternatively, the worker can be run from supervisord::
 Creating a new Zibrato worker
 +++++++++++++++++++++++++++++
 
-New Zibrato backend workers should subclass the Backend class specified in 
+New Zibrato backend workers should subclass the Backend class specified in
 zibrato/backend.py. They probably need to reimplement the connect, parse,
 post, and flush methods, and must include code for running as __main__. See
 zibrato/librato.py as an example.
+
+The setup.py script contains an "entry_points" section for defining console
+scripts. The preferred implementation of an additional worker will be to name
+it following the "zibrato-service" pattern and add it to the console_scripts
+array.
 
 Metric types
 ____________
