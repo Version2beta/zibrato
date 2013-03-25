@@ -1,8 +1,9 @@
 from distutils.core import setup
+from zibrato import __version__
 
 setup(
     name='Zibrato',
-    version='0.1.7',
+    version=__version__,
     author='Rob Martin @version2beta',
     author_email='rob@version2beta.com',
     packages=['zibrato', 'zibrato.tests'],

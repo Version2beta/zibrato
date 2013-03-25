@@ -8,11 +8,12 @@ import collections
 import argparse
 import threading
 
-API = 'https://metrics-api.librato.com/v1/metrics'
+__version_info__ = (0, 1, 8)
+__version__ = ".".join(map(lambda x: str(x), __version_info__))
 
-TYPES_OF_METRICS = [
-      'counters', 'gauges'
-    ]
+USER_AGENT = 'zibrato/%s' % __version__
+API = 'https://metrics-api.librato.com/v1/metrics'
+TYPES_OF_METRICS = [ 'counters', 'gauges' ]
 
 Measurement = collections.namedtuple(
     'Measurement',
@@ -21,7 +22,10 @@ Measurement = collections.namedtuple(
 
 class Librato(Backend):
   def connect(self):
-    r = requests.head(API, auth = (self.username, self.apitoken))
+    r = requests.head(
+        API,
+        auth = (self.username, self.apitoken),
+        headers = {'User-Agent': USER_AGENT })
     return r.status_code
   def parse(self, message):
     print message
@@ -52,8 +56,15 @@ class Librato(Backend):
       self.rollup_counters()
       auth = (self.username, self.apitoken)
       data = json.dumps(self.queue)
-      headers = {'content-type': 'application/json'}
-      r = requests.post(API, auth = auth, data = data, headers = headers)
+      headers = {
+          'content-type': 'application/json',
+          'User-Agent': USER_AGENT
+          }
+      r = requests.post(
+          API,
+          auth = auth,
+          data = data,
+          headers = headers)
       self.queue = {}
       if r.status_code > 200:
         raise IOError(r.text + ' ' + data)

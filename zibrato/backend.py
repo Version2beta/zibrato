@@ -4,6 +4,9 @@ import argparse
 from fuzzywuzzy import process
 from time import sleep
 
+__version_info__ = (0, 1, 8)
+__version__ = ".".join(map(lambda x: str(x), __version_info__))
+
 TYPES_OF_METRICS = [
       'counters', 'timers', 'gauges'
     ]
