@@ -5,3 +5,4 @@ v0.1.3, 1/8/2013 -- Minor documentation improvements.
 v0.1.4, 1/8/2013 -- Added a requirements.txt for tests.
 v0.1.5, 1/8/2013 -- Removed configuration file with too much data.
 v0.1.6, 1/8/2013 -- Learning how to include a data file in a package.
+v0.1.7, 1/8/2013 -- Improved the counter rollup test.
