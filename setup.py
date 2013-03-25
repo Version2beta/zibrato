@@ -20,5 +20,11 @@ setup(
     ],
     package_data={
         '': ['*.dist'],
-      },
+    },
+    entry_points = {
+      'console_scripts': [
+        'broker = zibrato.backend:main',
+        'librato = zibrato.librato:main',
+      ]
+    }
 )

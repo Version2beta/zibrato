@@ -76,7 +76,7 @@ class Broker(object):
       else:
         raise
 
-if __name__ == "__main__":
+def main():
   parser = argparse.ArgumentParser(
     description = 'Backend manager for Zibrato')
   parser.add_argument('--host', default = '127.0.0.1',
@@ -87,3 +87,5 @@ if __name__ == "__main__":
   b = Broker(host = args.host, port = args.port)
   b.main()
 
+if __name__ == "__main__":
+  main()

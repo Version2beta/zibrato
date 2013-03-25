@@ -68,10 +68,10 @@ class Librato(Backend):
       self.queue = {}
       if r.status_code > 200:
         raise IOError(r.text + ' ' + data)
-      else: 
+      else:
         return r.status_code
 
-if __name__ == "__main__":
+def main():
   parser = argparse.ArgumentParser(
     description = 'Librato backend worker for Zibrato')
   parser.add_argument('--host',
@@ -107,7 +107,9 @@ if __name__ == "__main__":
         count_flushes += 1
         start = int(time())
     except KeyboardInterrupt:
-      raise KeyboardInterrupt('%d measurements / %d flushes' % 
+      raise KeyboardInterrupt('%d measurements / %d flushes' %
           (count_measurements, count_flushes))
     count_measurements += 1
 
+if __name__ == "__main__":
+  main()
