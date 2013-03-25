@@ -72,6 +72,7 @@ def setUpModule():
   broker_thread.start()
   backend.subscribe('testing_backend')
   l.subscribe('testing_librato')
+  sleep(0.5)
 
 def tearDownModule():
   global receiver, z, l, broker, backend
@@ -105,7 +106,7 @@ class TestThatZibratoIsAvailable(unittest.TestCase):
     expect(z.connected()) == True
     z3.close()
     del z3
-    
+
 class TestSendingAMessageToZeroMQ:
   def test_if_we_queued_a_message(self):
     z_thread = threading.Thread(
@@ -114,7 +115,7 @@ class TestSendingAMessageToZeroMQ:
           'level': 'testing',
           'value': 'test_if_we_queued_a_message'}))
     z_thread.start()
-    expect(receiver.receive('testing')[0:49]) ==  ( 
+    expect(receiver.receive('testing')[0:49]) ==  (
           'testing|Gauge|default|test_if_we_queued_a_message')
   def test_that_we_can_fail_to_receive_a_message_with_report(self):
     z_thread = threading.Thread(
@@ -130,7 +131,7 @@ class TestMetricsAsDecorators:
     pass
   def test_counter_as_decorator(self):
     self.function_that_will_be_counted()
-    received = receiver.receive('info') 
+    received = receiver.receive('info')
     count = float(received.split('|')[3])
     expect(count) == 1
   @z.count_me(level = 'info', name = 'countertest', value = 5)
@@ -138,7 +139,7 @@ class TestMetricsAsDecorators:
     pass
   def test_counter_as_decorator_with_larger_increment(self):
     self.function_that_will_be_counted_plus_five()
-    received = receiver.receive('info') 
+    received = receiver.receive('info')
     count = float(received.split('|')[3])
     expect(count) == 5
   @z.time_me(level = 'info', name = 'timertest')
@@ -154,13 +155,13 @@ class TestMetricsAsContextManagers:
   def test_counter_as_a_context_manager(self):
     with z.Count_me(level = 'info', name = 'countermanager'):
       pass
-    received = receiver.receive('info') 
+    received = receiver.receive('info')
     count = float(received.split('|')[3])
     expect(count) == 1
   def test_counter_plus_five_as_a_context_manager(self):
     with z.Count_me(level = 'info', name = 'countermanager', value = 5):
       pass
-    received = receiver.receive('info') 
+    received = receiver.receive('info')
     count = float(received.split('|')[3])
     expect(count) == 5
   def test_timer_as_a_context_manager(self):
