@@ -99,7 +99,7 @@ Example code::
     def myfunctt():
       time_consuming_operations()
     ...
-    @z.count_me(level = 'info', name = "myfunct_counter', value = 5) # inc by 5
+    @z.count_me(level = 'info', name = 'myfunct_counter', value = 5) # inc by 5
     def myfunctc():
       pass
     ...
