@@ -91,7 +91,7 @@ Metric decorators and context managers take up to four arguments:
 
 Example code::
 
-    import zibrato
+    from zibrato import Zibrato
     z = Zibrato()
     # or z = Zibrato(host = '127.0.0.1', port = '5550')
     ...
