@@ -1,17 +1,4 @@
-sys
-os
-nose
-expecter
 pyzmq
 fuzzywuzzy
 requests
 simplejson
-collections
-argparse
-datetime
-functools
-contextlib
-re
-time
-threading
-
